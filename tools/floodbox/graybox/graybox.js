@@ -4,6 +4,7 @@ import getStyle from 'https://da.live/nx/utils/styles.js';
 import { crawl } from 'https://da.live/nx/public/utils/tree.js';
 import promoteFiles from '../promote.js';
 import previewOrPublishPaths from '../bulk-action.js';
+import { SUCCESS_CODES } from '../constants.js';
 
 const buttons = await getStyle(`https://da.live/nx/styles/buttons.css`);
 const style = await getStyle(import.meta.url);
@@ -23,6 +24,7 @@ export default class MiloFloodgate extends LitElement {
     this._startPreviewPublish = false;
     this._filesCount = 0;
     this._promotedFilesCount = 0;
+    this._promoteErrorCount = 0;
     this._previewedFilesCount = 0;
     this._publishedFilesCount = 0;
     this._crawledFiles = [];
@@ -82,8 +84,8 @@ export default class MiloFloodgate extends LitElement {
         expName: exp,
         promoteType: 'graybox',
         files: this._crawledFiles,
-        callback: () => {
-          this._promotedFilesCount++;
+        callback: (status) => {
+          SUCCESS_CODES.includes(status.statusCode) ? this._promotedFilesCount++ : this._promoteErrorCount++;            
           this.requestUpdate();
         }
       });
@@ -94,7 +96,6 @@ export default class MiloFloodgate extends LitElement {
   }
 
   async startPreviewPublish(publish) {
-
     const { org, repo } = this.getOrgRepoExp();
     const startTime = Date.now();
     const paths = this._crawledFiles.map(file => file.path   );
@@ -167,7 +168,9 @@ export default class MiloFloodgate extends LitElement {
       <div class="promote-info info-box">
         <h2>Step 2: Promote Graybox Experience</h2>
         <p>Promoting "${this._gbExpPath}"... </p>
+        <p>Files to promote: ${this._filesCount}</p>
         <p>Files promoted: ${this._promotedFilesCount}</p>
+        <p>Promote errors: ${this._promoteErrorCount}</p>
         <p class="${this._promoteDuration === 0 ? 'hide' : ''}">Duration: ~${this._promoteDuration} seconds</p>
       </div>
       ${this._startPreviewPublish ? this.renderPreviewPublishInfo() : nothing}

@@ -14,9 +14,12 @@ const SUPPORTED_FILES = {
   svg: 'image/svg+xml',
 };
 
+const SUCCESS_CODES = [200, 201, 204];
+
 export {
   DA_ORIGIN,
   DA_ORIGIN_LOCAL,
   AEM_ORIGIN,
   SUPPORTED_FILES,
+  SUCCESS_CODES,
 };

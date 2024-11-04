@@ -40,8 +40,8 @@ class Promote {
       }
       const destFilePath = file.path.replace(this.srcSitePath, this.destSitePath);
       console.log(`Promoting file: ${file.path} to ${destFilePath}`);
-      await this.requestHandler.uploadContent(destFilePath, content, file.ext);
-      this.callback();
+      const status = await this.requestHandler.uploadContent(destFilePath, content, file.ext);
+      this.callback(status);
     } else {
       console.error(`Failed to fetch : ${response.status} :: ${file.path}`);
     }
