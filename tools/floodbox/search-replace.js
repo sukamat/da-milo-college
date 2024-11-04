@@ -20,7 +20,6 @@ class SearchReplace {
     } else {
       console.error(`Unknown search type: ${this.searchType}`);
     }
-
     return content;
   }
 

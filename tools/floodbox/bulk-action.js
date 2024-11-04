@@ -19,6 +19,10 @@ class BulkAction {
     return path;
   }
 
+  delay = () => new Promise((resolve) => {
+    setTimeout(resolve, BATCH_DELAY);
+  });
+
   async previewOrPublishPath({ path, action, isDelete = false }) {
     path = this.cleanUpPath(path);
     const method = isDelete ? 'DELETE' : 'POST';
@@ -49,11 +53,6 @@ class BulkAction {
     }
     return helixResponse;
   }
-
-  delay = (timeout = BATCH_DELAY) =>
-    new Promise((resolve) => {
-      setTimeout(() => resolve(), timeout);
-    });
 }
 
 async function previewOrPublishPaths({ org, repo, paths, action, callback, isDelete = false }) {
@@ -64,6 +63,4 @@ async function previewOrPublishPaths({ org, repo, paths, action, callback, isDel
   return resp;
 }
 
-export {
-  previewOrPublishPaths
-}
+export default previewOrPublishPaths;

@@ -2,8 +2,8 @@ import DA_SDK from 'https://da.live/nx/utils/sdk.js';
 import { LitElement, html, nothing } from 'https://da.live/deps/lit/dist/index.js';
 import getStyle from 'https://da.live/nx/utils/styles.js';
 import { crawl } from 'https://da.live/nx/public/utils/tree.js';
-import { promoteFiles } from '../promote.js';
-import { previewOrPublishPaths } from '../bulk-action.js';
+import promoteFiles from '../promote.js';
+import previewOrPublishPaths from '../bulk-action.js';
 
 const buttons = await getStyle(`https://da.live/nx/styles/buttons.css`);
 const style = await getStyle(import.meta.url);
@@ -11,7 +11,7 @@ const style = await getStyle(import.meta.url);
 export default class MiloFloodgate extends LitElement {
   static properties = {
     repo: { type: String },
-    token: { type: String },    
+    token: { type: String },
   };
 
   constructor() {
@@ -34,7 +34,7 @@ export default class MiloFloodgate extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.shadowRoot.adoptedStyleSheets = [buttons, style];    
+    this.shadowRoot.adoptedStyleSheets = [buttons, style];
   }
 
   firstUpdated() {
@@ -56,13 +56,13 @@ export default class MiloFloodgate extends LitElement {
   }
 
   async startCrawl(experiencePath) {
-    const { results, getDuration } = crawl({ 
-      path: experiencePath, 
+    const { results, getDuration } = crawl({
+      path: experiencePath,
       callback: () => {
         this._filesCount++;
         this.requestUpdate();
-      }, 
-      throttle: 10 
+      },
+      throttle: 10
     });
     this._crawledFiles = await results;
     this._filesCount = this._crawledFiles.length;
@@ -75,39 +75,40 @@ export default class MiloFloodgate extends LitElement {
     const { org, repo, exp } = this.getOrgRepoExp();
     if (org && repo && exp && repo.endsWith('-graybox')) {
       const startTime = Date.now();
-      await promoteFiles({ 
-        accessToken: this.token, 
-        org, 
-        repo, 
-        expName: exp, 
-        promoteType: 'graybox', 
+      await promoteFiles({
+        accessToken: this.token,
+        org,
+        repo,
+        expName: exp,
+        promoteType: 'graybox',
         files: this._crawledFiles,
         callback: () => {
           this._promotedFilesCount++;
           this.requestUpdate();
-        } 
+        }
       });
       this._promoteDuration = (Date.now() - startTime) / 1000;
       this._startPreviewPublish = true;
-      this.requestUpdate();    
+      this.requestUpdate();
     }
   }
 
   async startPreviewPublish(publish) {
+
     const { org, repo } = this.getOrgRepoExp();
     const startTime = Date.now();
-    const paths = this._crawledFiles.map(file => file.path);
-    const repoToPrevPub = repo.replace('-graybox', '');    
-    const resp = await previewOrPublishPaths({ 
-      org, 
-      repo: repoToPrevPub, 
-      paths, 
-      action: publish ? 'publish' : 'preview', 
+    const paths = this._crawledFiles.map(file => file.path   );
+    const repoToPrevPub = repo.replace('-graybox', '');
+    const resp = await previewOrPublishPaths({
+      org,
+      repo: repoToPrevPub,
+      paths,
+      action: publish ? 'publish' : 'preview',
       callback: () => {
         this._previewedFilesCount++;
         this.requestUpdate();
       }
-    });      
+    });
     this._previewPublishDuration = (Date.now() - startTime) / 1000;
     console.log(resp);
   }
@@ -120,7 +121,7 @@ export default class MiloFloodgate extends LitElement {
     // #1 - Start crawling
     this._startCrawl = true;
     await this.startCrawl(this._gbExpPath);
-    
+
     // #2 - Start promoting
     this._startPromote = true;
     await this.startPromote();
@@ -207,7 +208,7 @@ export default class MiloFloodgate extends LitElement {
 customElements.define('milo-floodgate', MiloFloodgate);
 
 (async function init() {
-  const { context, token, actions } = await DA_SDK;  
+  const { context, token, actions } = await DA_SDK;
   const cmp = document.createElement('milo-floodgate');
   cmp.repo = context.repo;
   cmp.token = token;
