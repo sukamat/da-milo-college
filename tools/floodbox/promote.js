@@ -1,6 +1,6 @@
 import { DA_ORIGIN } from './constants.js';
 import RequestHandler from './request-handler.js';
-import SearchReplace from './search-replace.js';
+import searchAndReplace from './search-replace.js';
 import { isEditableFile } from './utils.js';
 
 const BATCH_SIZE = 100;
@@ -25,11 +25,8 @@ class Promote {
     const response = await this.requestHandler.daFetch(`${DA_ORIGIN}/source${file.path}`);
     if (response.ok) {
       let content = isEditableFile(file.ext) ? await response.text() : await response.blob();
-      if (file.ext === 'html') {
-        const searchReplace = new SearchReplace({
-          searchType: this.promoteType, org: this.org, repo: this.repo, expName: this.expName
-        });
-        content = searchReplace.searchAndReplace(content);
+      if (file.ext === 'html') {        
+        content = searchAndReplace({ content, searchType: this.promoteType, org: this.org, repo: this.repo, expName: this.expName });
       }
       let destFilePath = file.path.replace(this.srcSitePath, this.destSitePath);
       if (this.promoteType === 'graybox') {

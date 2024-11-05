@@ -51,4 +51,9 @@ class SearchReplace {
   }
 }
 
-export default SearchReplace;
+function searchAndReplace({content, searchType, org, repo, expName}) {
+  const searchReplace = new SearchReplace({ searchType, org, repo, expName });
+  return searchReplace.searchAndReplace(content);
+}
+
+export default searchAndReplace;
