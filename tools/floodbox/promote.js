@@ -31,7 +31,10 @@ class Promote {
         });
         content = searchReplace.searchAndReplace(content);
       }
-      const destFilePath = file.path.replace(this.srcSitePath, this.destSitePath);
+      let destFilePath = file.path.replace(this.srcSitePath, this.destSitePath);
+      if (this.promoteType === 'graybox') {
+        destFilePath = destFilePath.replace(`/${this.expName}`, '');
+      }
       const status = await this.requestHandler.uploadContent(destFilePath, content, file.ext);
       this.callback(status);      
     } else {
