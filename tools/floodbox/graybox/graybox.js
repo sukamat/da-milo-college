@@ -19,6 +19,7 @@ export default class MiloFloodgate extends LitElement {
     super();
     this._canPromote = true;
     this._gbExpPath = '';
+    this._gbExpPromoted = false;
     this._startCrawl = false;
     this._startPromote = false;
     this._startPreviewPublish = false;
@@ -26,7 +27,9 @@ export default class MiloFloodgate extends LitElement {
     this._promotedFilesCount = 0;
     this._promoteErrorCount = 0;
     this._previewedFilesCount = 0;
+    this._previewErrorCount = 0;
     this._publishedFilesCount = 0;
+    this._publishErrorCount = 0;
     this._crawledFiles = [];
     this._crawlDuration = 0;
     this._promoteDuration = 0;
@@ -85,6 +88,7 @@ export default class MiloFloodgate extends LitElement {
         promoteType: 'graybox',
         files: this._crawledFiles,
         callback: (status) => {
+          console.log(`${status.statusCode} :: ${status.destinationFilePath}`);
           SUCCESS_CODES.includes(status.statusCode) ? this._promotedFilesCount++ : this._promoteErrorCount++;            
           this.requestUpdate();
         }
@@ -95,23 +99,42 @@ export default class MiloFloodgate extends LitElement {
     }
   }
 
-  async startPreviewPublish(publish) {
+  async startPreviewPublish() {
     const { org, repo } = this.getOrgRepoExp();
     const startTime = Date.now();
     const paths = this._crawledFiles.map(file => file.path   );
     const repoToPrevPub = repo.replace('-graybox', '');
-    const resp = await previewOrPublishPaths({
+    await previewOrPublishPaths({
       org,
       repo: repoToPrevPub,
       paths,
-      action: publish ? 'publish' : 'preview',
-      callback: () => {
-        this._previewedFilesCount++;
+      action: 'preview',
+      callback: (status) => {
+        console.log(`${status.statusCode} :: ${status.aemUrl}`);
+        SUCCESS_CODES.includes(status.statusCode) ? this._previewedFilesCount++ : this._previewErrorCount++;
         this.requestUpdate();
       }
-    });
+    });    
+    this.requestUpdate();
+
+    // Publish files if checked
+    const publish = this.shadowRoot.querySelector('input[name="publish"]');
+    if (publish?.checked) {
+      await previewOrPublishPaths({
+        org,
+        repo: repoToPrevPub,
+        paths,
+        action: 'publish',
+        callback: (status) => {
+          console.log(`${status.statusCode} :: ${status.aemUrl}`);
+          SUCCESS_CODES.includes(status.statusCode) ? this._publishedFilesCount++ : this._publishErrorCount++;
+          this.requestUpdate();
+        }
+      });      
+    }
     this._previewPublishDuration = (Date.now() - startTime) / 1000;
-    console.log(resp);
+    this._gbExpPromoted = true;
+    this.requestUpdate();
   }
 
   async handleSubmit(event) {
@@ -127,11 +150,9 @@ export default class MiloFloodgate extends LitElement {
     this._startPromote = true;
     await this.startPromote();
 
-    // #3 - Preview/publish promoted files
-    this._startPreviewPublish = true;
-    const publish = this.shadowRoot.querySelector('input[name="publish"]');
-    console.log(`Checking publish: ${publish.checked}`);
-    await this.startPreviewPublish(publish?.checked);
+    // #3 - Preview promoted files
+    this._startPreviewPublish = true;    
+    await this.startPreviewPublish();    
   }
 
   handleCancel(event) {
@@ -151,15 +172,25 @@ export default class MiloFloodgate extends LitElement {
     this.requestUpdate();
   }
 
+  renderDone() {
+    return html`
+      <div class="done info-box">
+        <h2>Done</h2>
+        <p>Graybox experience files have been promoted and previewed/published.</p>
+      </div>
+    `;
+  }
+
   renderPreviewPublishInfo() {
     return html`
       <div class="preview-publish-info info-box">
         <h2>Step 3: Preview/Publish Graybox Experience</h2>
         <p>Previewing and Publishing promoted files"... </p>
-        <p>Files previewed: ${this._previewedFilesCount}</p>
-        <p>Files published: ${this._publishedFilesCount}</p>
+        <p>Files previewed: ${this._previewedFilesCount} | Preview errors: ${this._previewErrorCount}</p>
+        <p>Files published: ${this._publishedFilesCount} | Publish errors: ${this._publishErrorCount}</p>
         <p class="${this._previewPublishDuration === 0 ? 'hide' : ''}">Duration: ~${this._previewPublishDuration} seconds</p>
       </div>
+      ${this._gbExpPromoted ? this.renderDone() : nothing}
     `;
   }
 
@@ -169,8 +200,7 @@ export default class MiloFloodgate extends LitElement {
         <h2>Step 2: Promote Graybox Experience</h2>
         <p>Promoting "${this._gbExpPath}"... </p>
         <p>Files to promote: ${this._filesCount}</p>
-        <p>Files promoted: ${this._promotedFilesCount}</p>
-        <p>Promote errors: ${this._promoteErrorCount}</p>
+        <p>Files promoted: ${this._promotedFilesCount} | Promote errors: ${this._promoteErrorCount}</p>
         <p class="${this._promoteDuration === 0 ? 'hide' : ''}">Duration: ~${this._promoteDuration} seconds</p>
       </div>
       ${this._startPreviewPublish ? this.renderPreviewPublishInfo() : nothing}

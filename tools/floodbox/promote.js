@@ -21,13 +21,6 @@ class Promote {
     this.destSitePath = `/${org}/${destRepo}`;
   }
 
-  async promoteFiles() {
-    // Process and promote the files
-    console.log(`srcSitePath: ${this.srcSitePath} :: destSitePath: ${this.destSitePath}`);
-    console.log(`\nStep#2 - Promoting files to ${this.destSitePath}...`);
-    await this.promoteFilesInBatches(this.filesToPromote);
-  }
-
   async processFile(file) {
     const response = await this.requestHandler.daFetch(`${DA_ORIGIN}/source${file.path}`);
     if (response.ok) {
@@ -39,11 +32,12 @@ class Promote {
         content = searchReplace.searchAndReplace(content);
       }
       const destFilePath = file.path.replace(this.srcSitePath, this.destSitePath);
-      console.log(`Promoting file: ${file.path} to ${destFilePath}`);
       const status = await this.requestHandler.uploadContent(destFilePath, content, file.ext);
-      this.callback(status);
+      this.callback(status);      
     } else {
       console.error(`Failed to fetch : ${response.status} :: ${file.path}`);
+      const status = { statusCode: response.status, filePath: file.path, errorMsg: 'Failed to fetch' };
+      this.callback(status);
     }
   }
 
@@ -53,11 +47,16 @@ class Promote {
       await Promise.all(batch.map((file) => this.processFile(file)));
     }
   }
+
+  async promoteFiles() {    
+    console.log(`Promoting files from ${this.srcSitePath} to ${this.destSitePath}`);
+    await this.promoteFilesInBatches(this.filesToPromote);
+  }
 }
 
-function promoteFiles({ accessToken, org, repo, expName, promoteType, files, callback }) {
+async function promoteFiles({ accessToken, org, repo, expName, promoteType, files, callback }) {
   const promoter = new Promote(accessToken, org, repo, expName, promoteType, files, callback);
-  return promoter.promoteFiles();
+  await promoter.promoteFiles();
 }
 
 export default promoteFiles;
