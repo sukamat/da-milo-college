@@ -16,7 +16,7 @@ class Promote {
     this.callback = callback;
 
     this.requestHandler = new RequestHandler(accessToken);
-    const destRepo = repo.replace('-graybox', '');
+    const destRepo = promoteType === 'graybox' ? repo.replace('-graybox', '') : repo.replace('-pink', '');
     this.srcSitePath = `/${org}/${repo}`;
     this.destSitePath = `/${org}/${destRepo}`;
   }
