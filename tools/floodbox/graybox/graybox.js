@@ -229,7 +229,7 @@ export default class MiloFloodgate extends LitElement {
           <button class="primary" @click=${this.handleCancel}>Cancel</button> 
         </div>       
         <div class="checkbox-container">
-          <input type="checkbox" id="publish" name="publish">
+          <input type="checkbox" id="publish" name="publish" disabled>
           <label for="publish">Publish files after promote?</label>
         </div>
       </form>

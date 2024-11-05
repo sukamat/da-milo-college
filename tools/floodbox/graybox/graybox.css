@@ -39,6 +39,7 @@ input.path {
   box-sizing: border-box;
   width: 80%;
 }
+
 .input-row {
   font-family: var(--body-font-family);
   flex: 2;
