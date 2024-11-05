@@ -27,7 +27,7 @@ class Promote {
       let content = isEditableFile(file.ext) ? await response.text() : await response.blob();
       if (file.ext === 'html') {
         const searchReplace = new SearchReplace({
-          searchType: this.promoteType, org: this.org, repo: this.repo
+          searchType: this.promoteType, org: this.org, repo: this.repo, expName: this.expName
         });
         content = searchReplace.searchAndReplace(content);
       }

@@ -1,8 +1,9 @@
 class SearchReplace {
-  constructor({ searchType, org, repo }) {
+  constructor({ searchType, org, repo, expName }) {
     this.searchType = searchType; // 'floodgate' or 'graybox'
     this.org = org;
     this.repo = repo;
+    this.expName = expName;
     const repoSuffix = searchType === 'floodgate' ? 'pink' : 'graybox';
     this.destRepo = repo.replace(`-${repoSuffix}`, '');
   }
@@ -26,7 +27,11 @@ class SearchReplace {
   adjustUrlDomains(content) {
     const searchValue = `--${this.repo}--${this.org}`;
     const replaceValue = `--${this.destRepo}--${this.org}`;
-    return content.replaceAll(searchValue, replaceValue);
+    const updatedContent = content.replaceAll(searchValue, replaceValue);
+    if (this.searchType === 'floodgate') {
+      return updatedContent;
+    }    
+    return updatedContent.replaceAll(`.page/${this.expName}`, `.page`);    
   }
 
   removeGrayboxStyles(doc) {
