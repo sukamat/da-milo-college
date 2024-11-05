@@ -29,7 +29,6 @@ class BulkAction {
     const opts = { method };
     const aemUrl = `${AEM_ORIGIN}/${action}/${this.org}/${this.repo}/main${path}`;
     const resp = await this.requestHandler.daFetch(aemUrl, opts);
-    // const resp = { ok: true, status: 200 };
     if (!resp.ok) {
       console.error(`Failed to ${action} : ${resp.status} :: ${aemUrl}`);      
       this.callback({ statusCode: resp.status, aemUrl, errorMsg: `Failed to ${action}` });

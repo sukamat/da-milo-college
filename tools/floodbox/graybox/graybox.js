@@ -24,6 +24,7 @@ export default class MiloFloodgate extends LitElement {
     this._startPromote = false;
     this._startPreviewPublish = false;
     this._filesCount = 0;
+    this._promotedFiles = [];
     this._promotedFilesCount = 0;
     this._promoteErrorCount = 0;
     this._previewedFilesCount = 0;
@@ -89,6 +90,7 @@ export default class MiloFloodgate extends LitElement {
         files: this._crawledFiles,
         callback: (status) => {
           console.log(`${status.statusCode} :: ${status.destinationFilePath}`);
+          this._promotedFiles.push(status.destinationFilePath);
           SUCCESS_CODES.includes(status.statusCode) ? this._promotedFilesCount++ : this._promoteErrorCount++;            
           this.requestUpdate();
         }
@@ -102,7 +104,7 @@ export default class MiloFloodgate extends LitElement {
   async startPreviewPublish() {
     const { org, repo } = this.getOrgRepoExp();
     const startTime = Date.now();
-    const paths = this._crawledFiles.map(file => file.path   );
+    const paths = this._promotedFiles;
     const repoToPrevPub = repo.replace('-graybox', '');
     await previewOrPublishPaths({
       org,
