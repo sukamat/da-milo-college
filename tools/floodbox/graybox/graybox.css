@@ -12,9 +12,13 @@ body {
 .info-box {
   background: var(--s2-gray-75);
   border-radius: var(--s2-radius-100);
-  padding: var(--spacing-400);
-  margin-bottom: var(--spacing-400);
+  padding: var(--spacing-100) var(--spacing-400);
   margin-top: var(--spacing-400);
+}
+
+.info-box p {
+  margin-top: var(--spacing-50);
+  margin-bottom: var(--spacing-50);
 }
 
 .hide {

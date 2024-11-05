@@ -175,7 +175,7 @@ export default class MiloFloodgate extends LitElement {
   renderDone() {
     return html`
       <div class="done info-box">
-        <h2>Done</h2>
+        <h3>Done</h3>
         <p>Graybox experience files have been promoted and previewed/published.</p>
       </div>
     `;
@@ -184,7 +184,7 @@ export default class MiloFloodgate extends LitElement {
   renderPreviewPublishInfo() {
     return html`
       <div class="preview-publish-info info-box">
-        <h2>Step 3: Preview/Publish Graybox Experience</h2>
+        <h3>Step 3: Preview/Publish Graybox Experience</h3>
         <p>Previewing and Publishing promoted files"... </p>
         <p>Files previewed: ${this._previewedFilesCount} | Preview errors: ${this._previewErrorCount}</p>
         <p>Files published: ${this._publishedFilesCount} | Publish errors: ${this._publishErrorCount}</p>
@@ -197,7 +197,7 @@ export default class MiloFloodgate extends LitElement {
   renderPromoteInfo() {
     return html`
       <div class="promote-info info-box">
-        <h2>Step 2: Promote Graybox Experience</h2>
+        <h3>Step 2: Promote Graybox Experience</h3>
         <p>Promoting "${this._gbExpPath}"... </p>
         <p>Files to promote: ${this._filesCount}</p>
         <p>Files promoted: ${this._promotedFilesCount} | Promote errors: ${this._promoteErrorCount}</p>
@@ -210,7 +210,7 @@ export default class MiloFloodgate extends LitElement {
   renderCrawlInfo() {
     return html`
       <div class="crawl-info info-box">
-        <h2>Step 1: Crawl Graybox Experience</h2>
+        <h3>Step 1: Crawl Graybox Experience</h3>
         <p>Crawling "${this._gbExpPath}" to promote... </p>
         <p>Files crawled: ${this._filesCount}</p>
         <p>Duration: ~${this._crawlDuration} seconds</p>
@@ -224,7 +224,7 @@ export default class MiloFloodgate extends LitElement {
       <h1>Graybox</h1>
       <form @submit=${this.handleSubmit}>
         <div class="input-row">          
-          <input class="path" name="path" value="/sukamat/da-milo-college-graybox/bulk-2" @input=${this.validateInput} />
+          <input class="path" name="path" value="/sukamat/da-milo-college-graybox/temp" @input=${this.validateInput} />
           <button class="accent" .disabled=${!this._canPromote}>Promote</button>
           <button class="primary" @click=${this.handleCancel}>Cancel</button> 
         </div>       
