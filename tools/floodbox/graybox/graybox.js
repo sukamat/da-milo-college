@@ -9,7 +9,7 @@ import { SUCCESS_CODES } from '../constants.js';
 const buttons = await getStyle(`https://da.live/nx/styles/buttons.css`);
 const style = await getStyle(import.meta.url);
 
-export default class MiloFloodgate extends LitElement {
+export default class MiloGraybox extends LitElement {
   static properties = {
     repo: { type: String },
     token: { type: String },
@@ -240,11 +240,11 @@ export default class MiloFloodgate extends LitElement {
   }
 }
 
-customElements.define('milo-floodgate', MiloFloodgate);
+customElements.define('milo-graybox', MiloGraybox);
 
 (async function init() {
   const { context, token, actions } = await DA_SDK;
-  const cmp = document.createElement('milo-floodgate');
+  const cmp = document.createElement('milo-graybox');
   cmp.repo = context.repo;
   cmp.token = token;
   document.body.appendChild(cmp);
