@@ -1,0 +1,68 @@
+body {
+  background-color: #fff;
+  margin: 0 var(--spacing-1000);
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup.active {
+  display: block;
+}
+
+.breadcrumbs {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.breadcrumbs span {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.breadcrumbs span:hover {
+  text-decoration: none;
+}
+
+.file-item {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+.file-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.folder-label {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* button {
+  padding: 8px 12px;
+  cursor: pointer;
+} */
+
+.empty-message {
+  color: #999;
+  font-style: italic;
+}
