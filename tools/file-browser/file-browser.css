@@ -10,10 +10,12 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
+  height: 500px;
   background: #fff;
   padding: 20px;
   border: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .popup.active {
@@ -36,6 +38,13 @@ body {
   text-decoration: none;
 }
 
+#itemsList {
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
 .file-item {
   margin: 8px 0;
   display: flex;
@@ -53,14 +62,15 @@ body {
 }
 
 .actions {
-  margin-top: 20px;
-  text-align: right;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding-right: 10px;
 }
 
-/* button {
-  padding: 8px 12px;
-  cursor: pointer;
-} */
+.actions button {  
+  margin-left: 5px;
+}
 
 .empty-message {
   color: #999;
