@@ -84,19 +84,19 @@
   ],
   "apps": [
     {
-      "title": "Floodgate",
+      "title": "Sunil - App One",
       "description": "Admin tools for Milo Floodgate",
       "image": "https://publish-p133406-e1301188.adobeaemcloud.com/content/dam/milo/app-icons/floodgate.jpg",
       "url": "https://da.live/app/sukamat/da-milo-college/tools/floodgate"
     },
     {
-      "title": "Graybox",
+      "title": "Sunil - App Two",
       "description": "Admin tools for Milo Graybox",
       "image": "https://publish-p133406-e1301188.adobeaemcloud.com/content/dam/milo/app-icons/graybox.jpg",
       "url": "https://da.live/app/sukamat/da-milo-college/tools/graybox"
     },
     {
-      "title": "File Browser",
+      "title": "Sunil - App Three",
       "description": "Browser files and folders in DA",
       "image": "https://publish-p133406-e1301188.adobeaemcloud.com/content/dam/drafts/sukamat/chuck-norris.png",
       "url": "https://da.live/app/sukamat/da-milo-college/tools/file-browser"
